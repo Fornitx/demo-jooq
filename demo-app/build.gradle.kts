@@ -43,6 +43,8 @@ dependencies {
 
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.4")
 
+    implementation("org.jooq:jooq-jackson-extensions")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
@@ -105,11 +107,16 @@ jooq {
                                 isEnumConverter = true
                                 includeExpression = "project_rule\\.status"
                             },
-//                            ForcedType().apply {
-//                                name = "varchar"
-//                                includeExpression = ".*"
-//                                includeTypes = "INET"
-//                            }
+                            org.jooq.meta.jaxb.ForcedType().apply {
+                                userType = "com.example.demojooq.data.RuleDto"
+                                isJsonConverter = true
+                                includeExpression = "project_rule\\.rules"
+                            },
+                            org.jooq.meta.jaxb.ForcedType().apply {
+                                userType = "kotlin.collections.Map"
+                                converter = "com.example.demojooq.db.JsonbMapConverter"
+                                includeExpression = "project_rule\\.config"
+                            }
                         ))
                     }
                     generate.apply {

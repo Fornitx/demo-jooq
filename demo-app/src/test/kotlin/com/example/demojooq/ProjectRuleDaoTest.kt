@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import java.lang.RuntimeException
 import java.util.*
 
 @SpringBootTest
@@ -115,11 +114,7 @@ class ProjectRuleDaoTest : BaseDatabaseTest() {
         return ProjectRule(
             id = id,
             msg = msg,
-            rules = JSONB.jsonb(
-                objectMapper.writeValueAsString(
-                    RuleDto(true, setOf("foo", "bar"))
-                )
-            ),
+            rules = RuleDto(true, setOf("foo", "bar")),
             config = JSONB.jsonb(
                 objectMapper.writeValueAsString(
                     mapOf("a" to mapOf("b" to "c"))
