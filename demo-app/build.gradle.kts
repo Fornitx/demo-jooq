@@ -79,7 +79,6 @@ tasks.test {
 
 jooq {
     version.set(jooqVersion)
-//    edition.set(nu.studer.gradle.jooq.JooqEdition.OSS)
 
     configurations {
         create("main") {
@@ -141,7 +140,7 @@ jooq {
     }
 }
 
-tasks.named<nu.studer.gradle.jooq.JooqGenerate>("generateJooq").configure {
+tasks.named<nu.studer.gradle.jooq.JooqGenerate>("generateJooq") {
     javaExecSpec = Action {
         systemProperty("org.jooq.no-logo", true)
         systemProperty("org.jooq.no-tips", true)
