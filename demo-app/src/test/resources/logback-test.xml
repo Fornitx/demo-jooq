@@ -9,14 +9,14 @@
     </root>
 
     <!-- Testcontainers -->
+    <!-- https://www.testcontainers.org/supported_docker_environment/logging_config/ -->
     <logger name="org.testcontainers" level="INFO"/>
     <logger name="com.github.dockerjava" level="WARN"/>
     <logger name="com.github.dockerjava.zerodep.shaded.org.apache.hc.client5.http.wire" level="OFF"/>
 
     <!-- JOOQ -->
-    <logger name="org.jooq.Constants" level="WARN"/>
+    <!-- https://www.jooq.org/doc/latest/manual/sql-execution/logging/ -->
     <logger name="org.jooq.tools.LoggerListener" level="DEBUG"/>
     <!--<logger name="org.jooq" level="DEBUG"/>-->
-    <logger name="org.springframework.jdbc.core" level="TRACE"/>
 
 </configuration>

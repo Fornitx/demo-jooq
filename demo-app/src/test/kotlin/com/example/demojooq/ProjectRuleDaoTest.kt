@@ -4,12 +4,12 @@ import com.example.demojooq.common.BaseDatabaseTest
 import com.example.demojooq.data.RuleDto
 import com.example.demojooq.data.enums.StatusEnum
 import com.example.demojooq.db.ProjectRuleDao
+import com.example.demojooq.jooq.generated.tables.pojos.ProjectRule
+import com.example.demojooq.jooq.generated.tables.references.PROJECT_RULE
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.test.runTest
 import org.jooq.DSLContext
 import org.jooq.JSONB
-import org.jooq.generated.tables.pojos.ProjectRule
-import org.jooq.generated.tables.references.PROJECT_RULE
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

@@ -1,13 +1,12 @@
 package com.example.demojooq.db
 
+import com.example.demojooq.jooq.generated.tables.pojos.ProjectRule
+import com.example.demojooq.jooq.generated.tables.references.PROJECT_RULE
 import kotlinx.coroutines.future.await
 import org.jooq.DSLContext
 import org.jooq.Record1
-import org.jooq.generated.tables.pojos.ProjectRule
-import org.jooq.generated.tables.references.PROJECT_RULE
 import org.jooq.impl.DSL
 import org.jooq.impl.DSL.excluded
-import java.lang.RuntimeException
 import java.util.*
 import java.util.concurrent.ExecutorService
 

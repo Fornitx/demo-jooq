@@ -15,10 +15,10 @@ public class LiquibaseInit {
             var database = DatabaseFactory.getInstance()
                 .findCorrectDatabaseImplementation(new JdbcConnection(connection));
 
-            new Liquibase("init.sql", new ClassLoaderResourceAccessor(), database)
+            new Liquibase("init-for-jooq-codegen.sql", new ClassLoaderResourceAccessor(), database)
                 .update();
 
-            database.setDefaultSchemaName("project_schema");
+            database.setDefaultSchemaName("project_schema_jooq");
             new Liquibase("db/changelog/changelog-master.xml", new ClassLoaderResourceAccessor(), database)
                 .update();
         } catch (Exception ex) {

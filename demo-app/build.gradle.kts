@@ -72,6 +72,8 @@ tasks.compileKotlin {
 tasks.test {
 //    environment("TESTCONTAINERS_RYUK_DISABLED", true)
     environment("TESTCONTAINERS_CHECKS_DISABLE", true)
+    systemProperty("org.jooq.no-logo", true)
+    systemProperty("org.jooq.no-tips", true)
     useJUnitPlatform()
 }
 
@@ -88,36 +90,39 @@ jooq {
 
                 jdbc.apply {
                     driver = "org.testcontainers.jdbc.ContainerDatabaseDriver"
-                    url = "jdbc:tc:postgresql:11-alpine:///postgres?TC_INITFUNCTION=com.example.LiquibaseInit::init"
-                    user = "postgres"
-                    password = "postgres"
+                    url = "jdbc:tc:postgresql:11-alpine:///test?TC_INITFUNCTION=com.example.LiquibaseInit::init"
+                    user = "test"
+                    password = "test"
                 }
 
                 generator.apply {
                     name = "org.jooq.codegen.KotlinGenerator"
                     database.apply {
                         name = "org.jooq.meta.postgres.PostgresDatabase"
-                        inputSchema = "project_schema"
+                        inputSchema = "project_schema_jooq"
+                        isOutputSchemaToDefault = true
                         includes = ".*"
                         excludes = "databasechangelog.*"
 
-                        forcedTypes.addAll(listOf(
-                            org.jooq.meta.jaxb.ForcedType().apply {
-                                userType = "com.example.demojooq.data.enums.StatusEnum"
-                                isEnumConverter = true
-                                includeExpression = "project_rule\\.status"
-                            },
-                            org.jooq.meta.jaxb.ForcedType().apply {
-                                userType = "com.example.demojooq.data.RuleDto"
-                                isJsonConverter = true
-                                includeExpression = "project_rule\\.rules"
-                            },
-                            org.jooq.meta.jaxb.ForcedType().apply {
-                                userType = "kotlin.collections.Map"
-                                converter = "com.example.demojooq.db.JsonbMapConverter"
-                                includeExpression = "project_rule\\.config"
-                            }
-                        ))
+                        forcedTypes.addAll(
+                            listOf(
+                                org.jooq.meta.jaxb.ForcedType().apply {
+                                    userType = "com.example.demojooq.data.enums.StatusEnum"
+                                    isEnumConverter = true
+                                    includeExpression = "project_rule\\.status"
+                                },
+                                org.jooq.meta.jaxb.ForcedType().apply {
+                                    userType = "com.example.demojooq.data.RuleDto"
+                                    isJsonConverter = true
+                                    includeExpression = "project_rule\\.rules"
+                                },
+//                            org.jooq.meta.jaxb.ForcedType().apply {
+//                                userType = "kotlin.collections.Map"
+//                                converter = "com.example.demojooq.db.JsonbMapConverter"
+//                                includeExpression = "project_rule\\.config"
+//                            }
+                            )
+                        )
                     }
                     generate.apply {
                         isDeprecated = false
@@ -125,13 +130,20 @@ jooq {
                         isImmutablePojos = true
                         isFluentSetters = true
                     }
-//                    target.apply {
-//                        packageName = "nu.studer.sample"
+                    target.apply {
+                        packageName = "com.example.demojooq.jooq.generated"
 //                        directory = "build/generated-src/jooq/main"  // default (can be omitted)
-//                    }
+                    }
                     strategy.name = "org.jooq.codegen.DefaultGeneratorStrategy"
                 }
             }
         }
+    }
+}
+
+tasks.named<nu.studer.gradle.jooq.JooqGenerate>("generateJooq").configure {
+    javaExecSpec = Action {
+        systemProperty("org.jooq.no-logo", true)
+        systemProperty("org.jooq.no-tips", true)
     }
 }

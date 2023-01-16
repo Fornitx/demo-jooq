@@ -3,6 +3,7 @@ package com.example.demojooq.db
 import com.zaxxer.hikari.HikariDataSource
 import org.jooq.DSLContext
 import org.springframework.beans.factory.DisposableBean
+import org.springframework.boot.autoconfigure.jooq.DefaultConfigurationCustomizer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import java.util.concurrent.ExecutorService
@@ -25,6 +26,18 @@ class DbConfig(dataSource: DataSource?) : DisposableBean {
 
     @Bean
     fun projectRuleDao(dslContext: DSLContext): ProjectRuleDao = ProjectRuleDao(dslContext, executor)
+
+    @Bean
+    fun defaultConfigurationCustomizer(): DefaultConfigurationCustomizer {
+        return DefaultConfigurationCustomizer { conf ->
+//            conf.settings().withRenderMapping(
+//                RenderMapping().withSchemata(
+//                    MappedSchema().withInput()
+//                        .withOutput()
+//                )
+//            )
+        }
+    }
 
     override fun destroy() {
         executor.shutdown()
