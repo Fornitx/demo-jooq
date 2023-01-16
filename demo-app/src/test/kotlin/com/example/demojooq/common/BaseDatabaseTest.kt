@@ -34,12 +34,11 @@ abstract class BaseDatabaseTest {
 //                    )
 //                )
 //            }
-            .withReuse(true)
 
         init {
             postgresContainer.start()
 
-            System.setProperty("POSTGRES_URL", postgresContainer.jdbcUrl + "&TC_REUSABLE=true")
+            System.setProperty("POSTGRES_URL", postgresContainer.jdbcUrl)
             System.setProperty("POSTGRES_USERNAME", postgresContainer.username)
             System.setProperty("POSTGRES_PASSWORD", postgresContainer.password)
 
