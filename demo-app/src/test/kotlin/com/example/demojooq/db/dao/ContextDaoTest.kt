@@ -1,43 +1,42 @@
-package com.example.demojooq
+package com.example.demojooq.db.dao
 
-import com.example.demojooq.common.BaseDatabaseTest
+import com.example.demojooq.common.AbstractDatabaseTest
 import com.example.demojooq.data.RuleDto
 import com.example.demojooq.data.enums.StatusEnum
-import com.example.demojooq.db.ProjectRuleDao
-import com.example.demojooq.jooq.generated.tables.pojos.ProjectRule
-import com.example.demojooq.jooq.generated.tables.references.PROJECT_RULE
+import com.example.demojooq.db.pojo.ContextPojo
+import com.example.demojooq.jooq.generated.tables.references.ASDK_CONTEXT
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.test.runTest
-import org.jooq.DSLContext
 import org.jooq.JSONB
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.dao.OptimisticLockingFailureException
 import java.util.*
 
 @SpringBootTest
-class ProjectRuleDaoTest : BaseDatabaseTest() {
+class ContextDaoTest : AbstractDatabaseTest() {
+    private val prefix = "asdk"
+
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
     @Autowired
-    private lateinit var dslContext: DSLContext
-
-    @Autowired
-    private lateinit var dao: ProjectRuleDao
+    private lateinit var dao: ContextDao
 
     @AfterEach
     fun clearTable() {
-        dslContext.truncate(PROJECT_RULE).execute()
+        dslContext.truncate(ASDK_CONTEXT).execute()
     }
 
     @Test
     fun testUpsertNew() = runTest {
         println(
             dao.upsert(
-                newProjectRule(
+                prefix,
+                newContext(
                     msg = "test1",
                     status = StatusEnum.THREE
                 )
@@ -49,7 +48,8 @@ class ProjectRuleDaoTest : BaseDatabaseTest() {
     fun testUpsertNewWithId() = runTest {
         println(
             dao.upsert(
-                newProjectRule(
+                prefix,
+                newContext(
                     id = UUID.randomUUID(),
                     msg = "test1",
                     status = StatusEnum.THREE
@@ -63,7 +63,8 @@ class ProjectRuleDaoTest : BaseDatabaseTest() {
         val ruleId = UUID.randomUUID()
         println(
             dao.upsert(
-                newProjectRule(
+                prefix,
+                newContext(
                     id = ruleId,
                     msg = "test1",
                     status = StatusEnum.THREE
@@ -72,11 +73,12 @@ class ProjectRuleDaoTest : BaseDatabaseTest() {
         )
         println(
             dao.upsert(
-                newProjectRule(
+                prefix,
+                newContext(
                     id = ruleId,
+                    version = 1,
                     msg = "test2",
                     status = StatusEnum.ONE,
-                    version = 1
                 )
             )
         )
@@ -87,16 +89,18 @@ class ProjectRuleDaoTest : BaseDatabaseTest() {
         val ruleId = UUID.randomUUID()
         println(
             dao.upsert(
-                newProjectRule(
+                prefix,
+                newContext(
                     id = ruleId,
                     msg = "test1",
                     status = StatusEnum.THREE
                 )
             )
         )
-        assertThrows<RuntimeException> {
+        assertThrows<OptimisticLockingFailureException> {
             dao.upsert(
-                newProjectRule(
+                prefix,
+                newContext(
                     id = ruleId,
                     msg = "test2",
                     status = StatusEnum.ONE,
@@ -105,23 +109,27 @@ class ProjectRuleDaoTest : BaseDatabaseTest() {
         }
     }
 
-    private fun newProjectRule(
+    private fun newContext(
         id: UUID? = null,
-        msg: String,
-        status: StatusEnum,
         version: Int? = null,
-    ): ProjectRule {
-        return ProjectRule(
+        msg: String,
+        status: StatusEnum? = null,
+    ): ContextPojo {
+        return ContextPojo(
             id = id,
+            version = version,
             msg = msg,
-            rules = RuleDto(true, setOf("foo", "bar")),
+            status = status,
+            rules = JSONB.jsonb(
+                objectMapper.writeValueAsString(
+                    RuleDto(true, setOf("foo", "bar"))
+                )
+            ),
             config = JSONB.jsonb(
                 objectMapper.writeValueAsString(
                     mapOf("a" to mapOf("b" to "c"))
                 )
             ),
-            status = status,
-            version = version,
         )
     }
 }

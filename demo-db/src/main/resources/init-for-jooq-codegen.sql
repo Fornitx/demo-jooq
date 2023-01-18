@@ -1,2 +1,2 @@
-create schema project_schema_jooq;
-create extension "uuid-ossp" schema project_schema_jooq;
+create schema context_schema_jooq;
+create extension "uuid-ossp" schema context_schema_jooq;

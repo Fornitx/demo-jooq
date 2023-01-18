@@ -1,9 +1,3 @@
-//buildscript {
-//    dependencies {
-//        classpath(project(":demo-db"))
-//    }
-//}
-
 plugins {
     id("org.springframework.boot") version System.getProperty("springVersion")
     id("io.spring.dependency-management") version System.getProperty("springDMVersion")
@@ -18,7 +12,6 @@ java {
     targetCompatibility = JavaVersion.VERSION_19
 }
 
-//ext["jooq.version"] = "3.16.4"
 val jooqVersion = dependencyManagement.importedProperties["jooq.version"]
 val postgresVersion = dependencyManagement.importedProperties["postgresql.version"]
 val testcontainersVersion = "1.17.6"
@@ -98,7 +91,7 @@ jooq {
                     name = "org.jooq.codegen.KotlinGenerator"
                     database.apply {
                         name = "org.jooq.meta.postgres.PostgresDatabase"
-                        inputSchema = "project_schema_jooq"
+                        inputSchema = "context_schema_jooq"
                         isOutputSchemaToDefault = true
                         includes = ".*"
                         excludes = "databasechangelog.*"
@@ -108,12 +101,18 @@ jooq {
                                 org.jooq.meta.jaxb.ForcedType().apply {
                                     userType = "com.example.demojooq.data.enums.StatusEnum"
                                     isEnumConverter = true
-                                    includeExpression = "project_rule\\.status"
+                                    includeExpression = """
+                                        asdk_context\.status
+                                        | asdk_context_history\.status
+                                    """.trimIndent()
                                 },
                                 org.jooq.meta.jaxb.ForcedType().apply {
                                     userType = "com.example.demojooq.data.RuleDto"
                                     isJsonConverter = true
-                                    includeExpression = "project_rule\\.rules"
+                                    includeExpression = """
+                                        asdk_context\.rules
+                                        | asdk_context_history\.rules
+                                    """.trimIndent()
                                 },
 //                            org.jooq.meta.jaxb.ForcedType().apply {
 //                                userType = "kotlin.collections.Map"

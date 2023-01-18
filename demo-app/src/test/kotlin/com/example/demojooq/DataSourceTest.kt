@@ -1,6 +1,6 @@
 package com.example.demojooq
 
-import com.example.demojooq.common.BaseDatabaseTest
+import com.example.demojooq.common.AbstractDatabaseTest
 import com.zaxxer.hikari.HikariDataSource
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class DataSourceTest : BaseDatabaseTest() {
+class DataSourceTest : AbstractDatabaseTest() {
     @Test
     fun test() {
         log.info("\ndataSource = {}", dataSource)

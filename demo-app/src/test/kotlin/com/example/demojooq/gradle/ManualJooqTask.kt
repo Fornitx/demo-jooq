@@ -3,7 +3,6 @@ package com.example.demojooq.gradle
 import com.github.dockerjava.api.model.ExposedPort
 import com.github.dockerjava.api.model.PortBinding
 import com.github.dockerjava.api.model.Ports
-import liquibase.Contexts
 import liquibase.Liquibase
 import liquibase.database.DatabaseFactory
 import liquibase.database.jvm.JdbcConnection
@@ -14,14 +13,15 @@ import org.jooq.meta.jaxb.Configuration
 import org.jooq.meta.jaxb.Database
 import org.jooq.meta.jaxb.Generator
 import org.jooq.meta.jaxb.Jdbc
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
-import java.io.PrintWriter
 import java.sql.DriverManager
 
 private val log = KotlinLogging.logger {}
 
+@Disabled("example")
 class ManualJooqTask {
     @Test
     fun run() {

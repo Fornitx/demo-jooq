@@ -2,6 +2,7 @@ package com.example.demojooq.common
 
 import mu.KLogging
 import mu.KotlinLogging
+import org.jooq.DSLContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.TestPropertySource
@@ -13,10 +14,10 @@ import kotlin.reflect.jvm.jvmName
 @TestPropertySource(
     properties = [
         "spring.liquibase.change-log=classpath:/db/changelog/changelog-master.xml",
-        "spring.liquibase.default-schema=project_schema",
+        "spring.liquibase.default-schema=context_schema",
     ]
 )
-abstract class BaseDatabaseTest {
+abstract class AbstractDatabaseTest {
     companion object : KLogging() {
         protected val postgresContainer: PostgreSQLContainer<*> = PostgreSQLContainer(
             DockerImageName.parse("postgres:11-alpine")
@@ -52,5 +53,8 @@ abstract class BaseDatabaseTest {
     protected lateinit var dataSource: DataSource
 
     @Autowired
-    protected lateinit var template: JdbcTemplate
+    protected lateinit var jdbcTemplate: JdbcTemplate
+
+    @Autowired
+    protected lateinit var dslContext: DSLContext
 }

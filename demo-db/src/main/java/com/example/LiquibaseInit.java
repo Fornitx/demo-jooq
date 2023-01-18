@@ -18,7 +18,7 @@ public class LiquibaseInit {
             new Liquibase("init-for-jooq-codegen.sql", new ClassLoaderResourceAccessor(), database)
                 .update();
 
-            database.setDefaultSchemaName("project_schema_jooq");
+            database.setDefaultSchemaName("context_schema_jooq");
             new Liquibase("db/changelog/changelog-master.xml", new ClassLoaderResourceAccessor(), database)
                 .update();
         } catch (Exception ex) {

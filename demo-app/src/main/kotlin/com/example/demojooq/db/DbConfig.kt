@@ -1,5 +1,9 @@
 package com.example.demojooq.db
 
+import com.example.demojooq.db.dao.ContextDao
+import com.example.demojooq.db.dao.ContextHistoryDao
+import com.example.demojooq.db.dao.asdk.AsdkContextDao
+import com.example.demojooq.db.dao.asdk.AsdkContextHistoryDao
 import com.zaxxer.hikari.HikariDataSource
 import org.jooq.DSLContext
 import org.springframework.beans.factory.DisposableBean
@@ -25,18 +29,25 @@ class DbConfig(dataSource: DataSource?) : DisposableBean {
     }
 
     @Bean
-    fun projectRuleDao(dslContext: DSLContext): ProjectRuleDao = ProjectRuleDao(dslContext, executor)
+    fun asdkContextDao(dslContext: DSLContext) = AsdkContextDao(dslContext, executor)
 
     @Bean
-    fun defaultConfigurationCustomizer(): DefaultConfigurationCustomizer {
-        return DefaultConfigurationCustomizer { conf ->
+    fun asdkContextHistoryDao(dslContext: DSLContext) = AsdkContextHistoryDao(dslContext, executor)
+
+    @Bean
+    fun contextDao(dslContext: DSLContext) = ContextDao(dslContext, executor)
+
+    @Bean
+    fun contextHistoryDao(dslContext: DSLContext) = ContextHistoryDao(dslContext, executor)
+
+    @Bean
+    fun defaultConfigurationCustomizer() = DefaultConfigurationCustomizer { conf ->
 //            conf.settings().withRenderMapping(
 //                RenderMapping().withSchemata(
 //                    MappedSchema().withInput()
 //                        .withOutput()
 //                )
 //            )
-        }
     }
 
     override fun destroy() {

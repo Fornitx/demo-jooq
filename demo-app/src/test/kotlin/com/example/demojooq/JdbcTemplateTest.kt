@@ -1,12 +1,12 @@
 package com.example.demojooq
 
-import com.example.demojooq.common.BaseDatabaseTest
+import com.example.demojooq.common.AbstractDatabaseTest
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class JdbcTemplateTest : BaseDatabaseTest() {
+class JdbcTemplateTest : AbstractDatabaseTest() {
     @ParameterizedTest
     @ValueSource(
         strings = [
@@ -18,7 +18,7 @@ class JdbcTemplateTest : BaseDatabaseTest() {
         ]
     )
     fun info(sql: String) {
-        val result = template.queryForList(sql)
+        val result = jdbcTemplate.queryForList(sql)
         log.info("\nresult =\n{}", result.joinToString(System.lineSeparator()))
     }
 }

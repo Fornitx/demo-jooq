@@ -3,5 +3,6 @@ plugins {
 }
 
 dependencies {
-    implementation("org.liquibase:liquibase-core:4.17.2")
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:${System.getProperty("springVersion")}"))
+    implementation("org.liquibase:liquibase-core")
 }
