@@ -46,7 +46,7 @@ class ContextHistoryDaoTest : AbstractDatabaseTest() {
         assertThat(list.first())
             .usingRecursiveComparison()
             .withEqualsForType(
-                { a, b -> a.truncatedTo(ChronoUnit.MILLIS).isEqual(b.truncatedTo(ChronoUnit.MILLIS)) },
+                { a, b -> a.truncatedTo(ChronoUnit.MILLIS) == b.truncatedTo(ChronoUnit.MILLIS) },
                 OffsetDateTime::class.java
             )
             .isEqualTo(pojoToSave)
